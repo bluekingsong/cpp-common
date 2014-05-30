@@ -7,11 +7,14 @@ using namespace std;
 
 namespace CppCommonFunction{
 
-class StringFunction
-{
+class StringFunction{
   public:
     static int split(const string& str, char spliter,vector<string>& result);
     static string join(const vector<string>& strs,char sep);
+};
+class TimeFunction{
+  public:
+    static string now();
 };
 
 };

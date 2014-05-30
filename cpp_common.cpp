@@ -1,4 +1,5 @@
 #include <sstream>
+#include <ctime>
 #include "cpp_common.h"
 using namespace CppCommonFunction;
 
@@ -28,4 +29,9 @@ string StringFunction::join(const vector<string>& strs,char sep){
         result+=strs[i]+sep_str;
     }
     return result+=strs.back();
+}
+
+string TimeFunction::now(){
+    time_t t=time(0);
+    return string(asctime(localtime(&t)));
 }
