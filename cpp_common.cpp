@@ -1,4 +1,6 @@
 #include <sstream>
+#include <iostream>
+#include <fstream>
 #include <ctime>
 #include "cpp_common.h"
 using namespace CppCommonFunction;
@@ -35,3 +37,39 @@ string TimeFunction::now(){
     time_t t=time(0);
     return string(asctime(localtime(&t)));
 }
+bool IndexAdapter::InitFromFile(const std::string& file_name,unsigned int index_of_key,char spliter){
+    std::ifstream fin(file_name.c_str());
+    if(!fin.is_open()){
+        std::cerr<<"open file "<<file_name<<" failed."<<std::endl;
+        return false;
+    }
+    keys_.clear();
+    std::string line;
+    std::vector<std::string> line_vec;
+    while(std::getline(fin,line)){
+        int n=StringFunction::split(line,spliter,line_vec);
+        if(index_of_key>=n){
+            std::cerr<<"WARNING:broken line,index of key out of line items"<<std::endl;
+        }else{
+            dict_.insert(std::map<std::string,unsigned int>::value_type(line_vec[index_of_key],keys_.size()));
+            keys_.push_back(line_vec[index_of_key]);
+        }
+    }
+    fin.close();
+    return true;
+}
+bool IndexAdapter::GetIndex(const std::string& key,unsigned int& index)const{
+    std::map<std::string,unsigned int>::const_iterator iter=dict_.find(key);
+    if(iter==dict_.end())   return false;
+    index=iter->second;
+    return true;
+}
+bool IndexAdapter::GetValue(unsigned int index,std::string& value)const{
+    if(index>=keys_.size())    return false;
+    value=keys_[index];
+    return true;
+}
+unsigned int IndexAdapter::GetSize()const{
+    return keys_.size();
+}
+
